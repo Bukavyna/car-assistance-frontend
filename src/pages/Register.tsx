@@ -2,39 +2,63 @@ import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate  } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
+import { validateField } from '../utils/validation';
+import { registerUser } from '../api/auth';
 
 export const Register = () => {
 	const [email, setEmail] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
+	const [emailError, setEmailError] = useState<string | null>(null);
+	const [passwordError, setPasswordError] = useState<string | null>(null);
 	const navigate =useNavigate();
 	const login = useAuthStore((state) => state.login);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [generalError, setGeneralError] = useState<string | null>(null);
 
 	const handleRegister = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		if (!email) {
-			alert('Заповніть всі поля');
+		// Використовуємо функцію валідації
+		const newEmailError = validateField({ type: 'email', value: email, required: true } as HTMLInputElement);
+		const newPasswordError = validateField({ type: 'password', value: password, required: true } as HTMLInputElement);
+
+		// Оновлюємо стан помилок
+		setEmailError(newEmailError);
+		setPasswordError(newPasswordError);
+
+		// Перевіряємо, чи немає помилок валідації
+		if (newEmailError || newPasswordError) {
+			// Якщо є помилки, зупиняємо виконання функції
 			return;
 		}
 
-		if (!password) {
-			alert('Заповніть всі поля');
+		// const newUser = {
+		//   id: Date.now().toString(),
+		// 	email,
+		// }
+
+		setIsLoading(true); // Включаємо стан завантаження
+		setGeneralError(null); // Очищаємо попередні помилки
+
+		try {
+			// Відправляємо дані на бекенд
+			const { user, token } = await registerUser({ email, password });
+
+			// Зберігаємо токен (якщо він потрібен для подальших запитів)
+			localStorage.setItem('token', token);
+
+			// Логін у глобальний стан (zustand)
+			login(user);
+
+			// Перехід на головну
+			navigate('/');
+		} catch (error: any) {
+			// Обробка помилки від бекенду
+			setGeneralError(error.message);
+		} finally {
+			setIsLoading(false);
 		}
-
-		const newUser = {
-			id: Date.now().toString(),
-			email,
-		};
-
-		// Симуляція збереження користувача в localStorage
-		localStorage.setItem('user', JSON.stringify(newUser));
-
-		// Логін у глобальний стан
-		login(newUser);
-
-		// Перехід на головну
-		navigate('/');
-	}
+	};
 
 	return (
 		<form onSubmit={handleRegister} style={{ maxWidth: '400px', margin: 'auto' }}>
@@ -45,26 +69,38 @@ export const Register = () => {
 				id="email"
 				type="email"
 				value={email}
-				onChange={(e:React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+				onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
+					setEmail(e.target.value);
+					setGeneralError(null);
+				}}
 				placeholder="Email"
 				required
 			/>
+			{emailError && <div style={{ color: 'red', fontSize: '12px' }}>{emailError}</div>}
 
 			<label htmlFor="password">Пароль</label>
 			<input
 				id="password"
 				type="password"
 				value={password}
-				onChange={(e:React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+				onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
+					setPassword(e.target.value);
+					setPasswordError(null);
+				}}
 				placeholder="Password"
+				required
 			/>
+			{passwordError && <div style={{ color: 'red', fontSize: '12px' }}>{passwordError}</div>}
+
+			{generalError && <div style={{ color: 'red', fontSize: '12px' }}>{generalError}</div>}
 
 			<button
 				type="submit"
 				style={{ marginTop: '1rem' }}
+				disabled={isLoading} // Відключаємо кнопку під час завантаження
 			>
-				Зареєструватися
+				{isLoading ? 'Завантаження...' : 'Зареєструватися'}
 			</button>
 		</form>
-	)
+	);
 };
