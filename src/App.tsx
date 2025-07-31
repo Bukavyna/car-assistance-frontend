@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Register } from './pages/Register';
 import { Login } from './pages/Login';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { CarsPage } from './pages/CarsPage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
 				<Route path="/" element={<h1 style={{color: 'red' }}>Car Assistance</h1>} />
 				<Route path="/register" element={<Register />} />
 				<Route path="/login" element={<Login />} />
+				<Route path="/cars" element={<CarsPage />} />
 				<Route
 					path="/"
 					element={
