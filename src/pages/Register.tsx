@@ -10,8 +10,18 @@ export const Register = () => {
 		setEmail,
 		password,
 		setPassword,
+		repeatPassword,
+		setRepeatPassword,
+		firstName,
+		setFirstName,
+		lastName,
+		setLastName,
 		emailError,
 		passwordError,
+		repeatPasswordError,
+		setRepeatPasswordError,
+		firstNameError,
+		lastNameError,
 		isLoading,
 		setIsLoading,
 		generalError,
@@ -26,7 +36,7 @@ export const Register = () => {
 	const handleRegister = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		if (!validateForm) {
+		if (!validateForm()) {
 			return;
 		}
 
@@ -54,36 +64,91 @@ export const Register = () => {
 	};
 
 	return (
-		<form onSubmit={handleRegister} style={{ maxWidth: '400px', margin: 'auto' }}>
+		<form onSubmit={handleRegister} style={{ maxWidth: '300px', margin: 'auto' }}>
 			<h2 style={{color: 'red'}}>Реєстрація</h2>
 
-			<label htmlFor="email">Email:</label>
-			<input
-				id="email"
-				type="email"
-				value={email}
-				onChange={(e) => {
-					setEmail(e.target.value);
-					resetErrors(null);
-				}}
-				placeholder="Email"
-				required
-			/>
+			<label style={{ color: 'black', fontSize: '16px', display: 'flex', flexDirection: 'column' }}  htmlFor="email">
+				<span style={{ marginRight: 'auto' }}>Пошта:</span>
+				<input
+					id="email"
+					type="email"
+					value={email}
+					onChange={(e) => {
+						setEmail(e.target.value);
+						resetErrors();
+					}}
+					placeholder="Email"
+					required
+				/>
+			</label>
+
 			{emailError && <div style={{ color: 'red', fontSize: '12px' }}>{emailError}</div>}
 
-			<label htmlFor="password">Пароль</label>
-			<input
-				id="password"
-				type="password"
-				value={password}
-				onChange={(e) => {
-					setPassword(e.target.value);
-					resetErrors(null);
-				}}
-				placeholder="Password"
-				required
-			/>
+			<label style={{ color: 'black', fontSize: '16px', display: 'flex', flexDirection: 'column' }}  htmlFor="password">
+				<span style={{ marginRight: 'auto' }}>Пароль:</span>
+				<input
+					id="password"
+					type="password"
+					value={password}
+					onChange={(e) => {
+						setPassword(e.target.value);
+						resetErrors();
+					}}
+					placeholder="Password"
+					required
+				/>
+			</label>
 			{passwordError && <div style={{ color: 'red', fontSize: '12px' }}>{passwordError}</div>}
+
+			<label style={{ color: 'black', fontSize: '16px', display: 'flex', flexDirection: 'column' }} htmlFor="repeatPassword">
+				<span style={{ marginRight: 'auto' }}>Підтвердити пароль:</span>
+				<input
+					id="repeatPassword"
+					type="password"
+					value={repeatPassword}
+					onChange={(e) => {
+						setRepeatPassword(e.target.value);
+						resetErrors();
+					}}
+					placeholder="Repeat Password"
+					required
+				/>
+			</label>
+			{passwordError && <div style={{ color: 'red', fontSize: '12px' }}>{repeatPasswordError}</div>}
+
+			<label style={{ color: 'black', fontSize: '16px', display: 'flex', flexDirection: 'column' }} htmlFor="firstName">
+				<span style={{ marginRight: 'auto' }}>Ім'я:</span>
+				<input
+					id="firstName"
+					type="text"
+					name="name"
+					value={firstName}
+					onChange={(e) => {
+						setFirstName(e.target.value);
+						resetErrors();
+					}}
+					placeholder="First Name"
+					required
+				/>
+			</label>
+			{passwordError && <div style={{ color: 'red', fontSize: '12px' }}>{firstNameError}</div>}
+
+			<label style={{ color: 'black', fontSize: '16px', display: 'flex', flexDirection: 'column' }} htmlFor="lastName">
+				<span style={{ marginRight: 'auto' }}>Прізвище:</span>
+				<input
+					id="lastName"
+					type="text"
+					name="name"
+					value={lastName}
+					onChange={(e) => {
+						setLastName(e.target.value);
+						resetErrors();
+					}}
+					placeholder="Last Name"
+					required
+				/>
+			</label>
+			{passwordError && <div style={{ color: 'red', fontSize: '12px' }}>{lastNameError}</div>}
 
 			{generalError && <div style={{ color: 'red', fontSize: '12px' }}>{generalError}</div>}
 
