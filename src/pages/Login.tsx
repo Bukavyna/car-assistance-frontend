@@ -1,35 +1,32 @@
 import * as React from 'react';
-import { useState } from 'react';
 import { useNavigate} from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
-import { validateField } from '../utils/validation';
 import { loginUser } from '../api/auth';
+import { useAuthForm } from '../hooks/useAuthForm';
 
 export const Login = () => {
-	const [email, setEmail] = useState<string>('');
-	const [password, setPassword] = useState<string>('');
-	const [emailError, setEmailError] = useState<string | null>(null);
-	const [passwordError, setPasswordError] = useState<string | null>(null);
+	const {
+		email,
+		setEmail,
+		password,
+		setPassword,
+		emailError,
+		passwordError,
+		isLoading,
+		setIsLoading,
+		generalError,
+		setGeneralError,
+		validateForm,
+		resetErrors
+	} = useAuthForm();
+
 	const navigate = useNavigate();
 	const login = useAuthStore((state) => state.login);
-	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const [generalError, setGeneralError] = useState<string | null>(null);
 
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		// Використовуємо функцію валідації
-		const newEmailError = validateField({ type: 'email', value: email, required: true } as HTMLInputElement);
-		const newPasswordError = validateField({ type: 'password', value: password, required: true } as HTMLInputElement);
-
-
-		// Оновлюємо стан помилок
-		setEmail(newEmailError);
-		setPassword(newPasswordError);
-
-		// Перевіряємо, чи немає помилок валідації
-		if (newEmailError || newPasswordError) {
-			// Якщо є помилки, зупиняємо виконання функції
+		if (!validateForm()) {
 			return;
 		}
 
@@ -65,9 +62,9 @@ export const Login = () => {
 				id="email"
 				type="email"
 				value={email}
-				onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
+				onChange={(e) => {
 					setEmail(e.target.value);
-					setEmailError(null);
+					resetErrors();
 				}}
 				placeholder="Email"
 				required
@@ -79,9 +76,9 @@ export const Login = () => {
 				id="password"
 				type="password"
 				value={password}
-				onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
+				onChange={(e) => {
 					setPassword(e.target.value);
-					setPasswordError(null);
+					resetErrors();
 				}}
 				placeholder="Password"
 				required
