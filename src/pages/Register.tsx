@@ -19,7 +19,6 @@ export const Register = () => {
 		emailError,
 		passwordError,
 		repeatPasswordError,
-		setRepeatPasswordError,
 		firstNameError,
 		lastNameError,
 		isLoading,
@@ -27,7 +26,7 @@ export const Register = () => {
 		generalError,
 		setGeneralError,
 		validateForm,
-		resetErrors
+		resetError
 	} = useAuthForm();
 
 	const navigate = useNavigate();
@@ -75,7 +74,7 @@ export const Register = () => {
 					value={email}
 					onChange={(e) => {
 						setEmail(e.target.value);
-						resetErrors();
+						resetError();
 					}}
 					placeholder="Email"
 					required
@@ -92,7 +91,7 @@ export const Register = () => {
 					value={password}
 					onChange={(e) => {
 						setPassword(e.target.value);
-						resetErrors();
+						resetError();
 					}}
 					placeholder="Password"
 					required
@@ -108,13 +107,13 @@ export const Register = () => {
 					value={repeatPassword}
 					onChange={(e) => {
 						setRepeatPassword(e.target.value);
-						resetErrors();
+						resetError();
 					}}
 					placeholder="Repeat Password"
 					required
 				/>
 			</label>
-			{passwordError && <div style={{ color: 'red', fontSize: '12px' }}>{repeatPasswordError}</div>}
+			{repeatPasswordError  && <div style={{ color: 'red', fontSize: '12px' }}>{repeatPasswordError}</div>}
 
 			<label style={{ color: 'black', fontSize: '16px', display: 'flex', flexDirection: 'column' }} htmlFor="firstName">
 				<span style={{ marginRight: 'auto' }}>Ім'я:</span>
@@ -125,13 +124,13 @@ export const Register = () => {
 					value={firstName}
 					onChange={(e) => {
 						setFirstName(e.target.value);
-						resetErrors();
+						resetError();
 					}}
 					placeholder="First Name"
 					required
 				/>
 			</label>
-			{passwordError && <div style={{ color: 'red', fontSize: '12px' }}>{firstNameError}</div>}
+			{firstNameError && <div style={{ color: 'red', fontSize: '12px' }}>{firstNameError}</div>}
 
 			<label style={{ color: 'black', fontSize: '16px', display: 'flex', flexDirection: 'column' }} htmlFor="lastName">
 				<span style={{ marginRight: 'auto' }}>Прізвище:</span>
@@ -142,13 +141,13 @@ export const Register = () => {
 					value={lastName}
 					onChange={(e) => {
 						setLastName(e.target.value);
-						resetErrors();
+						resetError();
 					}}
 					placeholder="Last Name"
 					required
 				/>
 			</label>
-			{passwordError && <div style={{ color: 'red', fontSize: '12px' }}>{lastNameError}</div>}
+			{lastNameError && <div style={{ color: 'red', fontSize: '12px' }}>{lastNameError}</div>}
 
 			{generalError && <div style={{ color: 'red', fontSize: '12px' }}>{generalError}</div>}
 

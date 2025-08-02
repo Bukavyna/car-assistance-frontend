@@ -6,29 +6,30 @@ import { Register } from './pages/Register';
 import { Login } from './pages/Login';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { CarsPage } from './pages/CarsPage';
+import { Home } from './pages/Home';
 
 function App() {
   return (
 		<>
 			<nav>
-				<Link to="/">Головна</Link> | <Link to="/register">Реєстрація</Link> | <Link to="/login">Login</Link>
+				<Link to="/">Головна</Link> | <Link to="/register">Реєстрація</Link> | <Link to="/login">Вхід</Link>
 			</nav>
 			<Routes>
-				<Route path="/" element={<h1 style={{color: 'red' }}>Car Assistance</h1>} />
+				<Route path="/" element={<Home />} />
 				<Route path="/register" element={<Register />} />
 				<Route path="/login" element={<Login />} />
-				<Route path="/cars" element={<CarsPage />} />
+
 				<Route
 					path="/"
 					element={
 					  <ProtectedRoute>
-						  {/*<CarList />*/}
+						  {/*<CarsPage />*/}
 					  </ProtectedRoute>
 					}
 				/>
 			</Routes>
 		</>
-  )
+  );
 }
 
 export default App
