@@ -10,17 +10,26 @@ const validationPatterns: ValidationPatterns = {
 	phone: /^\+?[0-9]{6,12}$/,
 	text: /.+/,
 	number: /^\d+$/,
-	password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/, // Приклад для пароля
+	password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&.])[A-Za-z\d@$!%*#?&.]{8,}$/,
 };
 
+interface ValidationInput {
+	value: string;
+	type?: string;
+	id?: string;
+	name?: string;
+	required?: boolean;
+}
+
 /**
- * Функція для отримання регулярного виразу на основі атрибутів поля вводу
- * @param input - HTML-елемент поля вводу (input або textarea).
+ * Функція для отримання регулярного виразу
+ * @param input - HTML-елемент або кастомний об'єкт для валідації.
  * @return Регулярний вираз для валідації або null, якщо не знайдено.
  */
 
-const getPattern = (input: HTMLInputElement | HTMLTextAreaElement): RegExp | null => {
-	const type = input.getAttribute('type') || input.tagName.toLowerCase();
+const getPattern = (input: ValidationInput): RegExp | null => {
+	// Використовуємо наш об'єкт, а не намагаємось викликати getAttribute
+	const type = input.type || 'text';
 	const id = input.id?.toLowerCase() || '';
 	const name = input.name?.toLowerCase() || '';
 
@@ -35,21 +44,23 @@ const getPattern = (input: HTMLInputElement | HTMLTextAreaElement): RegExp | nul
 
 /**
  * Валідує одне поле вводу
- * @param input -HTML-елемент для вводу.
+ * @param input -Кастомний об'єкт для валідації.
+ * @param {string} customErrorMessage - Повідомлення про помилку, яке буде використано замість стандартного.
  * @returns Рядок з повідомленням про помилку або null, якщо валідація успішна.
  */
 
-export const validateField = (input: HTMLInputElement | HTMLTextAreaElement): string | null => {
+export const validateField = (input: ValidationInput, customErrorMessage: string = 'Пароль має містити велику літеру, цифру та спецсимвол'): string | null => {
 	const pattern = getPattern(input);
 	const value = input.value.trim();
-	const errorMessage = input.dataset.errorMessage || 'Невірний вхід';
 
-	if (!input.required && value === '') {
+	if (!input.required && value !== '') {
 		return null;
 	}
 
 	if (pattern && !pattern.test(value)) {
-		return errorMessage;
+		console.log('Testing pattern:', pattern, 'on value:', value);
+
+		return customErrorMessage;
 	}
 
 	return null;
