@@ -4,3 +4,34 @@
   padding: 2rem;
   text-align: center;
 }
+
+.section {
+  width: 400px;
+  margin: auto;
+}
+
+.forms-label {
+  display: flex;
+  align-items: start;
+  color: black;
+
+  font-size: 16px;
+}
+
+.label-span {
+  margin-right: auto;
+}
+
+/*.btn {*/
+/*  width: 150px;*/
+/*  background-color: darksalmon;*/
+/*  color: white;*/
+/*  padding: 10px;*/
+/*  border-radius: 8px;*/
+/*}*/
+
+.error-style {
+  color: red;
+
+  font-size: 12px;
+}

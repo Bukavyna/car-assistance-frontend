@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useNavigate  } from 'react-router-dom';
-import { useAuthStore } from '../store/authStore';
 import { registerUser } from '../api/auth';
+import { useAuthStore } from '../store/authStore';
 import { useAuthForm } from '../hooks/useAuthForm';
 
 export const Register = () => {
@@ -43,8 +43,15 @@ export const Register = () => {
 		setGeneralError(null); // Очищаємо попередні помилки
 
 		try {
+			// 1️⃣ Реєстрація користувача
 			// Відправляємо дані на бекенд
-			const { user, token } = await registerUser({ email, password });
+			const { user, token } = await registerUser({
+				email,
+				password,
+				repeatPassword,
+				firstName,
+				lastName,
+			});
 
 			// Зберігаємо токен (якщо він потрібен для подальших запитів)
 			localStorage.setItem('token', token);
@@ -63,97 +70,130 @@ export const Register = () => {
 	};
 
 	return (
-		<form onSubmit={handleRegister} style={{ maxWidth: '300px', margin: 'auto' }}>
-			<h2 style={{color: 'red'}}>Реєстрація</h2>
+		<form
+			className="section"
+			onSubmit={handleRegister}
+		>
+			<h2 className="title">Реєстрація</h2>
 
-			<label style={{ color: 'black', fontSize: '16px', display: 'flex', flexDirection: 'column' }}  htmlFor="email">
-				<span style={{ marginRight: 'auto' }}>Пошта:</span>
-				<input
-					id="email"
-					type="email"
-					value={email}
-					onChange={(e) => {
-						setEmail(e.target.value);
-						resetError();
-					}}
-					placeholder="Email"
-					required
-				/>
-			</label>
+			<label className="forms-label" htmlFor="email">Ел. пошта:</label>
+			<div className="field">
+				<p className="control has-icons-left">
+					<input
+						className="input"
+						id="email"
+						type="email"
+						value={email}
+						onChange={(e) => {
+							setEmail(e.target.value);
+							resetError();
+						}}
+						placeholder="Email"
+						required
+					/>
+					<span className="icon is-small is-left">
+						<i className="fas fa-envelope"></i>
+					</span>
+				</p>
+			</div>
+				{emailError && <div className="error-style">{emailError}</div>}
 
-			{emailError && <div style={{ color: 'red', fontSize: '12px' }}>{emailError}</div>}
+			<label className="forms-label" htmlFor="password">Пароль:</label>
+				<div className="field">
+					<p className="control has-icons-left">
+						<input
+							className="input"
+							id="password"
+							type="password"
+							value={password}
+							onChange={(e) => {
+								setPassword(e.target.value);
+								resetError();
+							}}
+							placeholder="Password"
+							required
+						/>
+						<span className="icon is-small is-left">
+							<i className="fas fa-lock"></i>
+						</span>
+					</p>
+				</div>
+				{passwordError && <div className="error-style">{passwordError}</div>}
 
-			<label style={{ color: 'black', fontSize: '16px', display: 'flex', flexDirection: 'column' }}  htmlFor="password">
-				<span style={{ marginRight: 'auto' }}>Пароль:</span>
-				<input
-					id="password"
-					type="password"
-					value={password}
-					onChange={(e) => {
-						setPassword(e.target.value);
-						resetError();
-					}}
-					placeholder="Password"
-					required
-				/>
-			</label>
-			{passwordError && <div style={{ color: 'red', fontSize: '12px' }}>{passwordError}</div>}
+			<label className="forms-label" htmlFor="repeatPassword">Підтвердити пароль:</label>
+			<div className="field">
+				<p className="control has-icons-left">
+					<input
+						className="input"
+						id="repeatPassword"
+						type="password"
+						value={repeatPassword}
+						onChange={(e) => {
+							setRepeatPassword(e.target.value);
+							resetError();
+						}}
+						placeholder="Repeat Password"
+						required
+					/>
+					<span className="icon is-small is-left">
+						<i className="fas fa-lock"></i>
+					</span>
+				</p>
+			</div>
+				{repeatPasswordError  && <div className="error-style">{repeatPasswordError}</div>}
 
-			<label style={{ color: 'black', fontSize: '16px', display: 'flex', flexDirection: 'column' }} htmlFor="repeatPassword">
-				<span style={{ marginRight: 'auto' }}>Підтвердити пароль:</span>
-				<input
-					id="repeatPassword"
-					type="password"
-					value={repeatPassword}
-					onChange={(e) => {
-						setRepeatPassword(e.target.value);
-						resetError();
-					}}
-					placeholder="Repeat Password"
-					required
-				/>
-			</label>
-			{repeatPasswordError  && <div style={{ color: 'red', fontSize: '12px' }}>{repeatPasswordError}</div>}
+			<label className="forms-label" htmlFor="firstName">Ім'я:</label>
+				<div className="field">
+					<p  className="control has-icons-left">
+						<input
+							className="input"
+							id="firstName"
+							type="text"
+							name="firstName"
+							value={firstName}
+							onChange={(e) => {
+								setFirstName(e.target.value);
+								resetError();
+							}}
+							placeholder="First Name"
+							required
+						/>
+						<span className="icon is-small is-left">
+							<i className="fas fa-user"></i>
+						</span>
+					</p>
+				</div>
+				{firstNameError && <div className="error-style">{firstNameError}</div>}
 
-			<label style={{ color: 'black', fontSize: '16px', display: 'flex', flexDirection: 'column' }} htmlFor="firstName">
-				<span style={{ marginRight: 'auto' }}>Ім'я:</span>
-				<input
-					id="firstName"
-					type="text"
-					name="name"
-					value={firstName}
-					onChange={(e) => {
-						setFirstName(e.target.value);
-						resetError();
-					}}
-					placeholder="First Name"
-					required
-				/>
-			</label>
-			{firstNameError && <div style={{ color: 'red', fontSize: '12px' }}>{firstNameError}</div>}
+			<label className="forms-label" htmlFor="lastName">Прізвище:</label>
+			<div className="field">
+				<p  className="control has-icons-left">
+					<input
+						className="input"
+						id="lastName"
+						type="text"
+						name="lastName"
+						value={lastName}
+						onChange={(e) => {
+							setLastName(e.target.value);
+							resetError();
+						}}
+						placeholder="Last Name"
+						required
+					/>
+					<span className="icon is-small is-left">
+							<i className="fas fa-user"></i>
+						</span>
+				</p>
+			</div>
+			{lastNameError && <div className="error-style">{lastNameError}</div>}
 
-			<label style={{ color: 'black', fontSize: '16px', display: 'flex', flexDirection: 'column' }} htmlFor="lastName">
-				<span style={{ marginRight: 'auto' }}>Прізвище:</span>
-				<input
-					id="lastName"
-					type="text"
-					name="name"
-					value={lastName}
-					onChange={(e) => {
-						setLastName(e.target.value);
-						resetError();
-					}}
-					placeholder="Last Name"
-					required
-				/>
-			</label>
-			{lastNameError && <div style={{ color: 'red', fontSize: '12px' }}>{lastNameError}</div>}
-
-			{generalError && <div style={{ color: 'red', fontSize: '12px' }}>{generalError}</div>}
+			{generalError && <div className="error-style">{generalError}</div>}
 
 			<button
 				type="submit"
-				style={{ marginTop: '1rem' }}
+				className="button is-primary"
+				// disabled
 				disabled={isLoading} // Відключаємо кнопку під час завантаження
 			>
 				{isLoading ? 'Завантаження...' : 'Зареєструватися'}

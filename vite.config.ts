@@ -5,4 +5,7 @@ import react from '@vitejs/plugin-react-swc'
 export default defineConfig({
   base: '/car-assistance-frontend/',
   plugins: [react()],
+  server: {
+    port: 5173, // ← змінив тут порт
+  },
 })
